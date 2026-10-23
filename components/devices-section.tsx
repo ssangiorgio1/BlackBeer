@@ -10,8 +10,15 @@ export function DevicesSection() {
   const me = useDevice()
   const [devices, setDevices] = useState<Device[]>([])
   const [error, setError] = useState('')
-  const load = useCallback(() => api<Device[]>('/api/nfc/devices').then(setDevices).catch(() => {}), [])
+  const [code, setCode] = useState('')
+  const load = useCallback(() => me.deviceId ? api<Device[]>(`/api/nfc/devices?deviceId=${encodeURIComponent(me.deviceId)}`).then(setDevices).catch(() => {}) : Promise.resolve(), [me.deviceId])
   useEffect(() => { load(); const t = setInterval(load, 4000); return () => clearInterval(t) }, [load])
+
+  const claim = async () => {
+    setError('')
+    try { await api('/api/nfc/devices/claim', { method: 'POST', body: JSON.stringify({ deviceId: me.deviceId, code }) }); setCode(''); await me.refresh(); load() }
+    catch (e: any) { setError(e.message) }
+  }
 
   const setStatus = async (d: Device, status: string) => {
     setError('')
@@ -47,7 +54,11 @@ export function DevicesSection() {
         </div>}
       </div>)}
     </div>
-    {!isParent && me.status && <p className="mt-4 text-xs font-semibold text-black/40">Solo un dispositivo PARENT puede autorizar o revocar.</p>}
-    <button onClick={reset} className="mt-10 text-[11px] font-black uppercase tracking-widest text-black/30 hover:text-[#D9628A]">Reiniciar demo</button>
+    {!isParent && me.status && <div className="mt-6 rounded-2xl bg-[#F6D525] p-5">
+      <p className="text-sm font-black">¿Sos el administrador?</p>
+      <p className="mt-1 text-xs font-semibold text-black/60">Solo un dispositivo PARENT puede autorizar, revocar o reiniciar. Si tenés el código de administrador, reclamá el rol desde este dispositivo.</p>
+      <div className="mt-3 flex gap-2"><input value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && code && claim()} type="password" placeholder="Código de administrador" className="min-w-0 flex-1 rounded-xl border-2 border-black/10 bg-white px-4 py-3 text-sm font-semibold outline-none focus:border-black" /><button onClick={claim} disabled={!code} className="rounded-xl bg-[#1E1E1E] px-5 text-xs font-black text-white shadow-[4px_4px_0_#E385A4] disabled:opacity-40">Reclamar</button></div>
+    </div>}
+    {isParent && <button onClick={reset} className="mt-10 text-[11px] font-black uppercase tracking-widest text-black/30 hover:text-[#D9628A]">Reiniciar demo</button>}
   </div>
 }
