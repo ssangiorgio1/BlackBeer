@@ -83,6 +83,7 @@ export function CajaSection() {
             <p className="mt-2 max-w-sm text-sm text-white/45">{reader.scanning ? 'Apoyá la tarjeta del cliente sobre la parte trasera del celular.' : 'Activá la lectura y apoyá la tarjeta del cliente en el celular.'}</p>
             <button onClick={reader.scanning ? reader.stop : reader.start} disabled={blocked} className={`mt-6 flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-black disabled:opacity-40 ${reader.scanning ? 'bg-white/10' : 'bg-[#F6D525] text-black shadow-[4px_4px_0_#E385A4]'}`}><Radio size={16} />{reader.scanning ? 'Detener lectura' : 'Activar lectura NFC'}</button>
             {reader.error && <p className="mt-3 max-w-sm text-xs font-semibold text-[#E385A4]">{reader.error}</p>}
+            <p className="mt-4 max-w-sm rounded-xl bg-white/5 px-4 py-3 text-xs font-semibold text-white/55">¿iPhone, o un Android sin NFC? Apoyá la tarjeta en el celular: se abre la página del cliente y, si este dispositivo está autorizado, arriba aparece el <b className="text-[#F6D525]">modo caja</b> para sumar y canjear.</p>
           </div>
           <div className="border-t border-white/10 pt-5">
             <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-white/35">O buscá manualmente (código impreso o UID del chip)</p>

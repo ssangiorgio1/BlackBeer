@@ -108,11 +108,12 @@ export function NfcSection({ onBack }: { onBack: () => void }) {
           </div>
           <div className="mt-6 border-t border-white/10 pt-5">
             <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Página del cliente</p>
-            <p className="mt-1 text-xs text-white/50">Grabá en el chip el link de su página: así cualquier celular (iPhone incluido) que acerque la tarjeta ve sus puntos y premios. Se necesita un Android con Chrome.</p>
+            <p className="mt-1 text-xs text-white/50">Grabá en el chip el link de su página: así cualquier celular (iPhone incluido) que acerque la tarjeta ve sus puntos y premios. Con Android + Chrome se graba desde acá. Con iPhone, copiá el link y grabalo con la app gratis NXP TagWriter (Write tags → New dataset → Link).</p>
             <p className="mt-2 break-all rounded-lg bg-white/5 px-3 py-2 text-[11px] font-semibold text-white/60">{typeof window !== 'undefined' ? window.location.origin : ''}/c/{selected.token}</p>
             <div className="mt-3 flex flex-wrap gap-2">
               <button onClick={writer.writing ? writer.cancel : writeUrl} disabled={!device.authorized} className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-black disabled:opacity-40 ${writer.writing ? 'bg-[#D9628A] text-white' : 'bg-[#F6D525] text-black'}`}><Radio size={14} className={writer.writing ? 'animate-pulse' : ''} />{writer.writing ? 'Acercá el chip… (cancelar)' : 'Grabar URL en el chip'}</button>
               <a href={`/c/${selected.token}`} target="_blank" className="rounded-xl border border-white/25 px-4 py-2.5 text-xs font-black hover:bg-white/10">Ver página del cliente</a>
+              <button onClick={() => navigator.clipboard.writeText(`${window.location.origin}/c/${selected.token}`).then(() => say(true, 'Link copiado: pegalo en TagWriter')).catch(() => say(false, 'No se pudo copiar, seleccioná el link a mano'))} className="rounded-xl border border-white/25 px-4 py-2.5 text-xs font-black hover:bg-white/10">Copiar link</button>
             </div>
             {writer.error && <p className="mt-2 text-[11px] font-semibold text-[#E385A4]">{writer.error}</p>}
           </div>

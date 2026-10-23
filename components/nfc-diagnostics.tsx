@@ -60,12 +60,17 @@ export function NfcDiagnostics() {
     { ok: device.authorized ? true : device.status ? false : null, label: `Dispositivo autorizado (estado: ${device.status || '…'})`, fix: STATUS_FIX[device.status] ?? 'Este dispositivo no está autorizado.' },
   ]
   const failing = checks.filter((c) => c.ok === false)
+  const ios = /iPhone|iPad/i.test(navigator.userAgent)
 
-  return <details open={failing.length > 0} className="mb-6 rounded-2xl bg-white p-4 text-sm">
+  return <details open={failing.length > 0 || ios} className="mb-6 rounded-2xl bg-white p-4 text-sm">
     <summary className="flex cursor-pointer items-center gap-2 text-xs font-black uppercase tracking-widest">
       <span className={`size-2.5 rounded-full ${failing.length ? 'bg-[#D9628A]' : 'bg-green-500'}`} />
       Diagnóstico NFC {failing.length ? `· ${failing.length} problema${failing.length > 1 ? 's' : ''}` : '· todo bien'}
     </summary>
+    {ios && <div className="mt-3 rounded-xl bg-[#bdf3d3] p-3 text-xs font-semibold text-black">
+      <p className="font-black">iPhone: la lectura desde la web no existe, pero NO la necesitás.</p>
+      <p className="mt-1">El iPhone lee tarjetas NFC que tengan un link grabado y lo abre solo. Si este iPhone está autorizado, esa página abre en <b>modo caja</b> y podés sumar puntos y canjear. Usá <b>Safari</b> para autorizarlo y para tocar las tarjetas. Los puntos 1 a 5 de abajo no aplican a iPhone; solo importa el último (autorización).</p>
+    </div>}
     <ul className="mt-3 flex flex-col gap-2">{checks.map((c) => <li key={c.label} className="flex gap-2">
       <span className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full text-white ${c.ok === true ? 'bg-green-500' : c.ok === false ? 'bg-[#D9628A]' : 'bg-black/20'}`}>{c.ok === false ? <X size={12} strokeWidth={3} /> : <Check size={12} strokeWidth={3} />}</span>
       <span><span className="text-xs font-bold">{c.label}</span>{c.ok === false && <span className="block text-[11px] font-semibold text-[#D9628A]">{c.fix}</span>}</span>
