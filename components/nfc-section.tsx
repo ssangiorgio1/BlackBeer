@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { CreditCard, Link2, Plus, Radio, RotateCw, X } from 'lucide-react'
 import { CardDesign, DESIGNS, hasOwnFlip, NfcCard3D } from '@/components/nfc-card-3d'
+import { NfcDiagnostics } from '@/components/nfc-diagnostics'
 import { api, CardView, fmt, useDevice, useNfcReader, useNfcWriter } from '@/lib/client'
 
 const COLORS = ['bg-[#E385A4]', 'bg-[#F6D525]', 'bg-[#F4B6C9]', 'bg-[#bdf3d3]']
@@ -89,6 +90,7 @@ export function NfcSection({ onBack }: { onBack: () => void }) {
       </div>
     </div>
 
+    <NfcDiagnostics />
     {reader.error && <p className="mb-4 rounded-xl bg-[#E385A4]/40 px-4 py-3 text-xs font-semibold">{reader.error}</p>}
     {device.status && !device.authorized && <p className="mb-4 rounded-xl bg-[#F6D525] px-4 py-3 text-xs font-bold">Este dispositivo ({device.deviceId}) está {device.status === 'REVOKED' ? 'revocado' : 'pendiente de autorización'}: pedile al administrador que lo apruebe en “Roles y permisos”. Mientras tanto no puede vincular chips.</p>}
 

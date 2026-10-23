@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ArrowRight, Check, Gift, Plus, Radio, Search, UserRound } from 'lucide-react'
 import { api, CardView, fmt, fmtDate, Movement, Reward, useDevice, useNfcReader } from '@/lib/client'
 import { MovementList } from '@/components/movimientos-section'
+import { NfcDiagnostics } from '@/components/nfc-diagnostics'
 
 type Step = 'idle' | 'card' | 'done'
 type Receipt = { tx: Movement; customerName: string }
@@ -67,7 +68,9 @@ export function CajaSection() {
 
     {blocked && <p className="mt-5 rounded-xl bg-[#F6D525] px-4 py-3 text-xs font-bold">Este dispositivo ({device.deviceId}) está {device.status === 'REVOKED' ? 'revocado' : 'pendiente de autorización'}. Un administrador tiene que aprobarlo en “Roles y permisos” antes de poder operar la caja.</p>}
 
-    <div className="mt-8 grid gap-6 xl:grid-cols-[1.2fr_.8fr]">
+    <div className="mt-6"><NfcDiagnostics /></div>
+
+    <div className="mt-2 grid gap-6 xl:grid-cols-[1.2fr_.8fr]">
       <section className={`${box} bg-[#1E1E1E] text-white`}>
         {step === 'idle' && <div>
           <div className="flex flex-col items-center py-6 text-center">
